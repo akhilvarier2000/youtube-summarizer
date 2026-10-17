@@ -25,6 +25,10 @@ Use Claude's skill discovery to find and install this skill.
 Once installed, simply ask Claude to summarize a YouTube video:
 > "Summarize this YouTube video: https://www.youtube.com/watch?v=VIDEO_ID"
 
+OR
+
+> "/youtube-summarizer https://www.youtube.com/watch?v=VIDEO_ID"
+
 Claude will automatically apply this skill and return:
 ```markdown
 ## Summary
@@ -41,7 +45,7 @@ Claude will automatically apply this skill and return:
 - Without Apify: Falls back to YouTube's native transcript API (works for most videos with captions)
 
 ## License
-[Choose your preferred license - see Step 4 below]
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contributing
 Feel free to submit issues or pull requests!
