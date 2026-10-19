@@ -1,6 +1,6 @@
-# YouTube Video Summarizer (Apify-powered)
+# YouTube Video Summarizer (Apify-powered with Language Preference)
 
-Use this skill when the user wants to summarize a YouTube video, extract its transcript via Apify, and provide an English translation. The output will be formatted in Markdown with separate Summary and Transcript sections.
+Use this skill when the user wants to summarize a YouTube video, extract its transcript, and provide output in either original language or English translation (with special handling for Hindi). The output will be formatted in Markdown with separate Summary and Transcript sections.
 
 ## How to Use
 
@@ -22,11 +22,25 @@ When a user provides a YouTube URL, follow these steps:
 ### 3. Process Transcript
 - Extract plain text from Apify result (remove timestamps if desired)
 - Detect the language of the transcript from Apify metadata
-- If the transcript is not in English:
+
+### 3.5. Handle Language Preference (Special for Hindi)
+- If the detected language is Hindi:
+  - Ask the user: **"Would you like the summary and transcript translated to English, or kept in Hindi?"**
+  - Wait for user response
+  - If user chooses English: set translation flag to TRUE
+  - If user chooses Hindi: set translation flag to FALSE (keep original Hindi)
+- If language is not Hindi:
+  - If language is English: set translation flag to FALSE (no translation needed)
+  - If language is neither English nor Hindi: set translation flag to TRUE (translate to English)
+
+### 4. Translate if Needed
+- If translation flag is TRUE:
   - Translate the full transcript to English using Claude's translation
   - Note any translation uncertainties if applicable
+- If translation flag is FALSE:
+  - Keep transcript in original language (Hindi or other)
 
-### 4. Generate Summary
+### 5. Generate Summary
 - Create a concise summary focusing on:
   - Main topics covered
   - Key points or arguments
@@ -37,18 +51,19 @@ When a user provides a YouTube URL, follow these steps:
   - 5-15 minutes: 3-5 bullet points or short paragraph
   - > 15 minutes: 5-7 bullet points or multi-paragraph summary
 - Use neutral, informative tone
+- **Important**: Generate the summary in the same language as the final transcript (English if translated, Hindi if kept in Hindi, etc.)
 
-### 5. Format Output
+### 6. Format Output
 Present the results in this Markdown structure:
 
 ```markdown
 ## Summary
 
-[Summary text here - can be bullet points or paragraph]
+[Summary text here - can be bullet points or paragraph, in the selected language]
 
 ## Transcript
 
-[Full English transcript here]
+[Full transcript here - in the selected language (English if translated, Hindi if kept in Hindi, etc.)]
 ```
 
 ## Error Handling
@@ -62,3 +77,5 @@ Present the results in this Markdown structure:
 - Works best with videos having official captions
 - Auto-generated captions may contain errors
 - Translation quality depends on source material clarity
+- For Hindi videos specifically, the user will be prompted to choose between English output or Hindi output
+- For all other languages: non-English videos are translated to English by default (except English itself)
